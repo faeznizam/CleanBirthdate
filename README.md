@@ -1,5 +1,7 @@
-# **Age and Birthdate Calculation from IC Number**
-This repository contains a Python script that calculates the birthdate and age based on the IC (Identification Card) number in an Excel file. It utilizes the Google Colab platform for file upload and processing. The script is designed to handle IC numbers in the format "000000-00-0000".
+# **Data Cleaning using Python**
+This repository contains a Python script that clean data. 
+1. Determine gender based on last digit IC number.
+2. Determine age and birthdate based on IC number. 
 
 ## Requirements
 To run the script, you need to have the following libraries installed:
