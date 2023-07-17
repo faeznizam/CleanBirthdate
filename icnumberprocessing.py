@@ -16,8 +16,26 @@ import datetime
 uploaded_file = files.upload()
 file = next(iter(uploaded_file))
 
+# validate national id
+def validate_nat_id(national_id):
+  # remove empty spaces between digit
+  national_id = national_id.replace(" ", "")
+
+  # add hypen to 12 digit number
+  if len(national_id) == 14:
+    return national_id
+  elif len(national_id) == 12:
+    national_id = f"{national_id[:6]}-{national_id[6:8]}-{national_id[8:]}"
+  else:
+    return None
+
+  return national_id
+
 # function to calculate birthdate
 def calculate_birthdate(national_id):
+  if national_id is None:
+    return None
+
   year = national_id[0:2]
   month = national_id[2:4]
   day = national_id[4:6]
@@ -30,31 +48,50 @@ def calculate_birthdate(national_id):
   else:
     century = 19
 
-  # combine year,month and day into dd/mm/yyyy format
-  birthdate = f"{day}/{month}/{century}{year}"
+  # check if day between 1-31 only and handle ValueError
+  try:
+      if int(day) >= 1 and int(day) <= 31:
+        birthdate = f"{century}{year}-{month}-{day}"
+      else:
+        return None
+  except ValueError:
+      birthdate = None
 
   return birthdate
 
 # function to calculate age
 def calculate_age(birthdate):
+  # check birthdate
+  if birthdate is None:
+    return None
+
   current_year = datetime.datetime.now().year
-  birth_year = int(birthdate[-4:])
+  birth_year = int(birthdate[:4])
   age = current_year - birth_year
 
   return age
 
 # manipulate file
 df = pd.read_excel(file)
-filter_df = df[
-      (df['National ID'].astype(str).str.len() == 14) &
-      df['National ID'].notna() &
-      (df['National ID'] != '')
-      ].copy()
 
+def filter_dataframe(df):
+    filter_condition = (
+        ((df['National ID'].astype(str).str.len() == 12) | (df['National ID'].astype(str).str.len() == 14)) &
+        df['National ID'].notna() &
+        (df['National ID'] != '')
+    )
+    filtered_df = df[filter_condition].copy()
+    return filtered_df
+
+filter_df = filter_dataframe(df)
+
+filter_df['National ID'] = filter_df['National ID'].apply(validate_nat_id)
 filter_df['Birthdate'] = filter_df['National ID'].apply(calculate_birthdate)
 filter_df['Age'] = filter_df['Birthdate'].apply(calculate_age)
 
 df.loc[filter_df.index, ['Birthdate', 'Age']] = filter_df[['Birthdate', 'Age']]
+
+df[['National ID', 'Birthdate', 'Age']]
 
 # rename file with new name
 current_filename = file[:-5]
