@@ -1,4 +1,4 @@
-# **Data Cleaning using Python**
+# ***Data Cleaning using Python***
 This repository contains a Python script that clean data. 
 1. Determine gender based on last digit IC number.
 2. Determine age and birthdate based on IC number. 
