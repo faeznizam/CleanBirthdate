@@ -1,7 +1,4 @@
-# ***Data Cleaning using Python***
-This repository contains a Python script that clean data. 
-1. Determine gender based on last digit IC number.
-2. Determine age and birthdate based on IC number. 
+# ***Data Cleaning using Python : Populate Age and Birthday based on National ID***
 
 ## Requirements
 To run the script, you need to have the following libraries installed:
@@ -16,4 +13,3 @@ To run the script, you need to have the following libraries installed:
 4. The modified Excel file with updated birthdates and ages will be saved as "Result for masterfile.xlsx".
 5. The file will be downloaded automatically.
 
-Note: Ensure that the IC numbers in the file are in the format "000000-00-0000". Invalid or improperly formatted IC numbers will be skipped, and the corresponding cells will be left blank.
